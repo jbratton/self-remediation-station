@@ -1,7 +1,7 @@
 #import "MergeSort.h"
 
 @implementation MergeSort
-+ (NSMutableArray*)sort:(NSArray*)input {
++ (NSMutableArray*)sortArray:(NSArray*)input {
 	NSLog(@"Hello, World!");
 	return [[NSMutableArray alloc] init];
 }
