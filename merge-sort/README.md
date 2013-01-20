@@ -2,4 +2,4 @@ merge sort
 ==========
 
 A first try at a recursive merge sort implementation in Objective-C.
-Sorts NSMutableArrays of objects that implement a compare method.
+Sorts an NSMutableArray of objects that implement a - (NSComparisonResult)compare: method.
