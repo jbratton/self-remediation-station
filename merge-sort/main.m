@@ -12,12 +12,12 @@ int main (int argc, const char * argv[]) {
 	];
 
 	for (id input in inputArrays) {
-	  NSMutableArray *result = [MergeSort sortArray:input];
+		NSMutableArray *result = [MergeSort sortArray:input];
 	
 		NSLog(@"input array: %@", [input componentsJoinedByString:@", "]);
 		NSLog(@"result array: %@", [result componentsJoinedByString:@", "]);
 	}
 
 	[pool drain];
-  return 0;
+	return 0;
 }
