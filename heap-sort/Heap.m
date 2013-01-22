@@ -1,23 +1,33 @@
 #import <Foundation/Foundation.h>
 #import "Heap.h"
 
+int const DEFAULT_HEAP_SIZE = 16;
+
 @implementation Heap
 
-- (id)initWithArray:(NSArray *)array {
-	heapSize = [array count];
+- (id)init {
+	return [self initWithHeapSize:DEFAULT_HEAP_SIZE];
+}
 
-	heapArray = (id *)malloc(sizeof(id) * heapsize);
+- (id)initWithHeapSize:(int)size {
+	_heapSize = size;
+	heapArray = (id *)malloc(sizeof(id) * _heapSize);
 
 	if (heapArray == NULL) {
 		NSLog(@"wtf, man -- couldn't malloc for a new Heap");
 		exit(-1);
 	}
+	return self;
+}
 
-	for (int i = 0; i < heapSize; i++) {
+- (id)initWithArray:(NSArray *)array {
+	[self initWithHeapSize [array count]];
+
+	for (int i = 0; i < _heapSize; i++) {
 		heapArray[i] = [array objectAtIndex:i];
 	}
 
-	for (int i = heapSize/2 - 1; i >= 0; i--) {
+	for (int i = _heapSize/2 - 1; i >= 0; i--) {
 		[self heapifyAtIndex:i];
 	}
 	return self;
@@ -45,12 +55,12 @@
 	int largest;
 	int left = [self left:index];
 	int right = [self right:index];
-	if (left <= heapSize && [heapArray[left] compare:heapArray[index]] == NSOrderedDescending)
+	if (left <= _heapSize && [heapArray[left] compare:heapArray[index]] == NSOrderedDescending)
 		largest = left;
 	else
 		largest = index;
 
-	if (right <= heapSize && [heapArray[right] compare:heapArray[largest]] == NSOrderedDescending)
+	if (right <= _heapSize && [heapArray[right] compare:heapArray[largest]] == NSOrderedDescending)
 		largest = right;
 
 	if (largest != index) {
@@ -63,16 +73,17 @@
 }
 
 - (void)growArray:(int)newSize {
-	id newHeapArray[] = (id *)malloc(sizeof(id) * newSize);
+	id *newHeapArray = (id *)malloc(sizeof(id) * newSize);
 	if (newHeapArray == NULL) {
 		NSLog(@"ran out of memory to grow heapArray");
 		exit(-1);
 	}
-	for (int i = 0; i < heapSize; i++) {
+	for (int i = 0; i < _heapSize; i++) {
 		newHeapArray[i] = heapArray[i];
 	}
 	free(heapArray);
 	heapArray = newHeapArray;
+	_heapSize = newSize;
 }
 
 - (void)dealloc {
