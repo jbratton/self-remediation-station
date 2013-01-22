@@ -26,10 +26,8 @@ int const DEFAULT_HEAP_SIZE = 16;
 	for (int i = 0; i < _heapSize; i++) {
 		heapArray[i] = [array objectAtIndex:i];
 	}
+	[self buildHeap];
 
-	for (int i = _heapSize/2-1; i >= 0; i--) {
-		[self heapifyAtIndex:i];
-	}
 	return self;
 }
 
@@ -64,12 +62,32 @@ int const DEFAULT_HEAP_SIZE = 16;
 		largest = right;
 
 	if (largest != index) {
-		id temp = heapArray[index];
-		heapArray[index] = heapArray[largest];
-		heapArray[largest] = temp;
+		[self swapElementsAtIndex:index andIndex:largest];
 	}
 
 	return largest;
+}
+
+- (void)swapElementsAtIndex:(int)idx_a andIndex:(int)idx_b {
+	id temp = heapArray[idx_a];
+	heapArray[idx_a] = heapArray[idx_b];
+	heapArray[idx_b] = temp;
+}
+
+- (void)buildHeap {
+	for (int i = _heapSize/2-1; i >= 0; i--) {
+		[self heapifyAtIndex:i];
+	}
+}
+
+- (void)sortHeap {
+	int actualHeapSize = _heapSize;
+	for (int i = _heapSize-1; i > 0; i--) {
+		[self swapElementsAtIndex:0 andIndex:i];
+		_heapSize--;
+		[self heapify];
+	}
+	_heapSize = actualHeapSize;
 }
 
 - (void)growArray:(int)newSize {
