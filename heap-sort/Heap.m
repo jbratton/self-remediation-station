@@ -21,7 +21,7 @@ int const DEFAULT_HEAP_SIZE = 16;
 }
 
 - (id)initWithArray:(NSArray *)array {
-	[self initWithHeapSize [array count]];
+	[self initWithHeapSize:[array count]];
 
 	for (int i = 0; i < _heapSize; i++) {
 		heapArray[i] = [array objectAtIndex:i];
@@ -41,7 +41,7 @@ int const DEFAULT_HEAP_SIZE = 16;
 	[self heapifyAtIndex:0];
 }
 
-- (int)heapifyAtIndex:(int)idx {
+- (void)heapifyAtIndex:(int)idx {
 	int lastIndex = idx;
 	int index = idx;
 	

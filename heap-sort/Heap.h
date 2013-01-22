@@ -15,7 +15,7 @@ extern int const DEFAULT_HEAP_SIZE;
 - (int)left:(int)index;
 - (int)right:(int)index;
 - (void)heapify;
-- (int)heapifyAtIndex:(int)idx;
+- (void)heapifyAtIndex:(int)idx;
 - (int)heapifyOnceAtIndex:(int)index;
 - (void)growArray:(int)newSize;
 - (void)dealloc;
