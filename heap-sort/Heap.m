@@ -27,15 +27,15 @@ int const DEFAULT_HEAP_SIZE = 16;
 		heapArray[i] = [array objectAtIndex:i];
 	}
 
-	for (int i = _heapSize/2 - 1; i >= 0; i--) {
+	for (int i = _heapSize/2-1; i >= 0; i--) {
 		[self heapifyAtIndex:i];
 	}
 	return self;
 }
 
-- (int)parent:(int)index { return index/2; }
-- (int)left:(int)index { return index*2; }
-- (int)right:(int)index { return index*2+1; }
+- (int)parent:(int)index { return (index-1)/2; }
+- (int)left:(int)index { return index*2+1; }
+- (int)right:(int)index { return index*2+2; }
 
 - (void)heapify {
 	[self heapifyAtIndex:0];
@@ -55,12 +55,12 @@ int const DEFAULT_HEAP_SIZE = 16;
 	int largest;
 	int left = [self left:index];
 	int right = [self right:index];
-	if (left <= _heapSize && [heapArray[left] compare:heapArray[index]] == NSOrderedDescending)
+	if (left < _heapSize && [heapArray[left] compare:heapArray[index]] != NSOrderedAscending)
 		largest = left;
 	else
 		largest = index;
 
-	if (right <= _heapSize && [heapArray[right] compare:heapArray[largest]] == NSOrderedDescending)
+	if (right < _heapSize && [heapArray[right] compare:heapArray[largest]] != NSOrderedAscending)
 		largest = right;
 
 	if (largest != index) {
