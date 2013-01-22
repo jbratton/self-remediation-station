@@ -1,4 +1,5 @@
 CC := clang
+CFLAGS := -g
 FRAMEWORKS := -framework Foundation
 BUILD_DIR := build
 SOURCES := Heap.m main.m
@@ -14,12 +15,12 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 $(EXEC): $(OBJECTS)
-	$(CC) $(FRAMEWORKS) $(OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(FRAMEWORKS) $(OBJECTS) -o $@
 
 $(OBJECTS): $(HEADERS) | $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: %.m
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 %.h:
 	$(NOOP)
