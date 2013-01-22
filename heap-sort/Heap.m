@@ -91,4 +91,13 @@ int const DEFAULT_HEAP_SIZE = 16;
 	heapArray = NULL;
 }
 
+- (NSString *)description {
+	NSString *desc = [NSMutableString new];
+	[desc appendFormat:@"%@", heapArray[0]];
+	for (int i = 1; i < _heapSize; i++) {
+		[desc appendFormat:@", %@", heapArray[i]];
+	}
+	return desc;
+}
+
 @end

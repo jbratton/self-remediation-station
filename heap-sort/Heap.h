@@ -19,5 +19,6 @@ extern int const DEFAULT_HEAP_SIZE;
 - (int)heapifyOnceAtIndex:(int)index;
 - (void)growArray:(int)newSize;
 - (void)dealloc;
+- (NSString *)description;
 
 @end
