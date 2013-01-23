@@ -31,6 +31,9 @@ extern NSComparisonResult const DEFAULT_ORDERING;
 - (void)insert:(id)object;
 - (id)maximum;
 - (id)extractMaximum;
+- (id)removeRoot;
+- (id)minimum;
+- (id)extractMinimum;
 
 - (void)growArray:(int)newSize;
 

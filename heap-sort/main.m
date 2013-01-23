@@ -35,12 +35,22 @@ int main(void) {
 	int testHeapSize = 20;
 	Heap *h = [[Heap alloc] init];
 	for (int i = 0; i < testHeapSize; i++) {
-		NSNumber *rnd = [NSNumber numberWithInt:arc4random_uniform(100)];
+		NSNumber *rnd = [NSNumber numberWithInt:arc4random_uniform(742)];
 		[h insert:rnd];
 	}
 	NSLog(@"testHeap: %@", h);
 	[h sortHeap];
 	NSLog(@"sorted: %@", h);
+	[h swapHeapOrdering];
+	[h buildHeap];
+	NSLog(@"order swapped heap: %@", h);
+	[h sortHeap];
+	NSLog(@"sorted: %@", h);
+	[h buildHeap];
+	id node;
+	while ((node = [h extractMaximum])) {
+		NSLog(@"max: %@, heap: %@", node, h);
+	}
 
 	[pool drain];
 	return 0;

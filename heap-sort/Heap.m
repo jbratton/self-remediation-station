@@ -113,16 +113,43 @@ NSComparisonResult const DEFAULT_ORDERING = NSOrderedAscending;
 }
 
 - (id)maximum {
-	if (heapOrdering != NSOrderedAscending) [self swapHeapOrdering];
+	if (_heapSize < 1) return nil;
+	if (heapOrdering != NSOrderedAscending) {
+		[self swapHeapOrdering];
+		[self buildHeap];
+	}
 	return heapArray[0];
 }
 
 - (id)extractMaximum {
+	if (_heapSize < 1) return nil;
 	id max = [self maximum];
+	[self removeRoot];
+	return max;
+}
+
+- (id)removeRoot {
+	id root = heapArray[0];
 	[self swapElementsAtIndex:0 andIndex:_heapSize-1];
 	_heapSize--;
 	[self heapify];
-	return max;
+	return root;
+}
+
+- (id)minimum {
+	if (_heapSize < 1) return nil;
+	if (heapOrdering != NSOrderedDescending) {
+		[self swapHeapOrdering];
+		[self buildHeap];
+	}
+	return heapArray[0];
+}
+
+- (id)extractMinimum {
+	if (_heapSize < 1) return nil;
+	id min = [self minimum];
+	[self removeRoot];
+	return min;
 }
 
 - (void)growArray:(int)newSize {
@@ -146,6 +173,7 @@ NSComparisonResult const DEFAULT_ORDERING = NSOrderedAscending;
 
 - (NSString *)description {
 	NSMutableString *desc = [NSMutableString new];
+	if (_heapSize < 1) return desc;
 	[desc appendFormat:@"%@", heapArray[0]];
 	for (int i = 1; i < _heapSize; i++) {
 		[desc appendFormat:@", %@", heapArray[i]];
