@@ -1,17 +1,32 @@
 #import <Foundation/Foundation.h>
 #import "Heap.h"
 
-int const DEFAULT_HEAP_SIZE = 16;
+int const DEFAULT_HEAP_ARRAY_SIZE = 16;
+NSComparisonResult const DEFAULT_ORDERING = NSOrderedAscending;
 
 @implementation Heap
 
 - (id)init {
-	return [self initWithHeapSize:DEFAULT_HEAP_SIZE];
+	return [self initWithHeapArraySize:DEFAULT_HEAP_ARRAY_SIZE];
 }
 
-- (id)initWithHeapSize:(int)size {
-	_heapSize = size;
-	heapArray = (id *)malloc(sizeof(id) * _heapSize);
+- (id)initWithArray:(NSArray *)array {
+	[self initWithHeapArraySize:[array count]];
+	_heapSize = [array count];
+
+	for (int i = 0; i < _heapSize; i++) {
+		heapArray[i] = [array objectAtIndex:i];
+	}
+	[self buildHeap];
+
+	return self;
+}
+
+- (id)initWithHeapArraySize:(int)size {
+	_heapSize = 0;
+	heapArraySize = size;
+	heapArray = (id *)malloc(sizeof(id) * heapArraySize);
+	heapOrdering = DEFAULT_ORDERING;
 
 	if (heapArray == NULL) {
 		NSLog(@"wtf, man -- couldn't malloc for a new Heap");
@@ -20,15 +35,9 @@ int const DEFAULT_HEAP_SIZE = 16;
 	return self;
 }
 
-- (id)initWithArray:(NSArray *)array {
-	[self initWithHeapSize:[array count]];
-
-	for (int i = 0; i < _heapSize; i++) {
-		heapArray[i] = [array objectAtIndex:i];
-	}
-	[self buildHeap];
-
-	return self;
+- (NSComparisonResult)swapHeapOrdering {
+	heapOrdering = -heapOrdering;
+	return heapOrdering;
 }
 
 - (int)parent:(int)index { return (index-1)/2; }
@@ -50,22 +59,22 @@ int const DEFAULT_HEAP_SIZE = 16;
 }
 
 - (int)heapifyOnceAtIndex:(int)index {
-	int largest;
+	int extreme;
 	int left = [self left:index];
 	int right = [self right:index];
-	if (left < _heapSize && [heapArray[left] compare:heapArray[index]] != NSOrderedAscending)
-		largest = left;
+	if (left < _heapSize && [heapArray[left] compare:heapArray[index]] != heapOrdering)
+		extreme = left;
 	else
-		largest = index;
+		extreme = index;
 
-	if (right < _heapSize && [heapArray[right] compare:heapArray[largest]] != NSOrderedAscending)
-		largest = right;
+	if (right < _heapSize && [heapArray[right] compare:heapArray[extreme]] != heapOrdering)
+		extreme = right;
 
-	if (largest != index) {
-		[self swapElementsAtIndex:index andIndex:largest];
+	if (extreme != index) {
+		[self swapElementsAtIndex:index andIndex:extreme];
 	}
 
-	return largest;
+	return extreme;
 }
 
 - (void)swapElementsAtIndex:(int)idx_a andIndex:(int)idx_b {
@@ -90,6 +99,32 @@ int const DEFAULT_HEAP_SIZE = 16;
 	_heapSize = actualHeapSize;
 }
 
+- (void)insert:(id)object {
+	if (_heapSize == heapArraySize) {
+		[self growArray:heapArraySize*2];
+	}
+	_heapSize++;
+	int index = _heapSize - 1;
+	while (index > 0 && [heapArray[[self parent:index]] compare:object] == DEFAULT_ORDERING) {
+		[self swapElementsAtIndex:index andIndex:[self parent:index]];
+		index = [self parent:index];
+	}
+	heapArray[index] = object;
+}
+
+- (id)maximum {
+	if (heapOrdering != NSOrderedAscending) [self swapHeapOrdering];
+	return heapArray[0];
+}
+
+- (id)extractMaximum {
+	id max = [self maximum];
+	[self swapElementsAtIndex:0 andIndex:_heapSize-1];
+	_heapSize--;
+	[self heapify];
+	return max;
+}
+
 - (void)growArray:(int)newSize {
 	id *newHeapArray = (id *)malloc(sizeof(id) * newSize);
 	if (newHeapArray == NULL) {
@@ -101,7 +136,7 @@ int const DEFAULT_HEAP_SIZE = 16;
 	}
 	free(heapArray);
 	heapArray = newHeapArray;
-	_heapSize = newSize;
+	heapArraySize = newSize;
 }
 
 - (void)dealloc {

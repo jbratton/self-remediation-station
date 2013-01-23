@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <stdlib.h>
 #import "Heap.h"
 
 int main(void) {
@@ -12,14 +13,34 @@ int main(void) {
 	];
 
 	for (id array in inputArrays) {
-		NSLog(@"array is like: %@", [array componentsJoinedByString:@", "]);
+		NSLog(@"---- array is like: %@", [array componentsJoinedByString:@", "]);
 		Heap *h = [[Heap alloc] initWithArray:array];
 		NSLog(@"heap is like: %@", h);
 		[h sortHeap];
 		NSLog(@"sorted heap: %@", h);
 		[h buildHeap];
 		NSLog(@"back to heap: %@", h);
+		[h swapHeapOrdering];
+		[h buildHeap];
+		NSLog(@"swapped ordering: %@", h);
+		[h sortHeap];
+		NSLog(@"sorted: %@", h);
+		[h swapHeapOrdering];
+		[h buildHeap];
+		NSLog(@"swapped back: %@", h);
+		NSLog(@"maximum is: %@", [h extractMaximum]);
+		NSLog(@"what's left: %@\n", h);
 	}
+
+	int testHeapSize = 20;
+	Heap *h = [[Heap alloc] init];
+	for (int i = 0; i < testHeapSize; i++) {
+		NSNumber *rnd = [NSNumber numberWithInt:arc4random_uniform(100)];
+		[h insert:rnd];
+	}
+	NSLog(@"testHeap: %@", h);
+	[h sortHeap];
+	NSLog(@"sorted: %@", h);
 
 	[pool drain];
 	return 0;
